@@ -1,0 +1,118 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+#root {
+  max-width: 900px;
+  max-height: 600px;
+  
+}
+
+#title {
+  font-size: calc(10px + 2vmin);
+  color: #61dafb;
+  text-align: left;
+}
+#question {
+  font-size: 1em;
+  background-color: #1c58da; /* Green background */
+  border: 1px solid darkblue; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */ 
+}
+
+.question-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-arround;
+  align-items: center; 
+  background-color: rgb(178, 234, 238); /* Green background */
+  border: 1px solid darkblue; /* Green border */
+  color: darkslateblue; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%; /* Set a width if needed */ 
+  
+}
+
+.question-block button {
+  width: 100%; 
+  font-size: 1em; 
+}
+
+/* Add a background color on hover */
+.question-block button:hover {
+  background-color: #1C58da;
+  color: white
+}
+
+#reset {
+  font-size: 1em;
+  margin-top: 25px;
+}
+
+#gameboard {
+  max-width: 900px;
+  max-height: 600px;
+  border-block-end-color: brown;
+  border-block-start-style: solid;
+  border-block-end-width: 3;
+}
+#wrapper {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+#left {
+  flex: 0 0 55%;
+  justify-content: center;
+  align-self: center;
+}
+
+#right {
+  flex: 1;
+  justify-items: center
+}
+
+#scorecard {
+  height: 100%;
+  vertical-align: middle;
+  font-size: 2em;
+}
+ #gamover {
+   color: rgb(150, 6, 6);
+ }
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
