@@ -15,7 +15,7 @@ function FirstName(props) {
     return(
         <div>
             {props.label} <br />
-            <input name = {props.name} value = {props.value} onChange = {props.onChange}/>
+            <input name = {props.name} type = {props.type} value = {props.value} onChange = {props.onChange}/>
         </div>
     )
 }
@@ -24,7 +24,7 @@ function LastName(props) {
     return(
         <div>
             <br />{props.label} <br />
-            <input name = {props.name} value = {props.value} onChange = {props.onChange}/>
+            <input name = {props.name}  type = {props.type} value = {props.value} onChange = {props.onChange}/>
         </div>
     )
 }
@@ -32,104 +32,87 @@ function ActivitySelector(props) {
     return (
       <div>
         <br />Select Activity<br />
-        <select onChange = {props.onChange}>
+        <select onChange = {props.onChange} value={props.defaultValue}>
             { props.opts &&
                 props.opts.map((opt, index) => (
-                    <option value = {opt} > {opt} </option>
+                    <option key = {index} value = {opt} > {opt} </option>
                 ))
             }
+            
         </select>
         <br />
+        <br />Check all that apply<br />
       </div>
     )
   }
 
-  function Checkbox(props) {
-      return(
-        <div>
-      <input type="checkbox" 
-             onChange = {props.onChange}
-             className="restrictions" 
-             name={props.name} 
-             value={props.code} 
-        />
-        {props.code}) {props.label}
-        </div>
-      )
-  }
-
-  function TableHeader() {
-    return (
-      <tr>
-          <th>Remove</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Activity</th>
-          <th>Restrictions</th>
-      </tr>
+function Checkbox(props) {
+    return(
+    <div>
+    <input type="checkbox" 
+            onChange = {props.onChange}
+            className="restrictions" 
+            name={props.name} 
+            checked = {props.checked}
+            value={props.code} 
+    />
+    {props.code}) {props.label}
+    </div>
     )
-  }
+}
 
-  function Post(props) {
-      return (
-          <tr>
-              <td><button>Remove</button></td>
-              <td>{props.fname}</td>
-              <td>{props.lname}</td>
-              <td>{props.activity}</td>
-              <td>{props.restrictions}</td>
-          </tr>
-      )
-  }
-
-// function Post(props) {
-//     var style = {
-//         display: "flex"
-//     }
-//     return(
-//         <div style = {style}>
-//             <PostButton label = "x" handleClick = {props.removeItem}/>
-//             <PostText text = {props.title}  width = "200px" />
-//             <PostButton label = "+" handleClick = {props.incrementScore}/>
-//             <PostText text = {props.score}  width = "20px" />
-//             <PostButton label = "-" handleClick = {props.decrementScore}/>
-//         </div>
-//     )
-// }
-
-// function PostList(props){
-//     return (
-//         <ol>
-//             {
-//                 props.postList.map((item,index) =>
-//                     <Post key = {index}
-//                         title = {item.title}
-//                         score = {item.score}
-//                         incrementScore = {() => props.updateScore(index, 1)}
-//                         decrementScore = {() => props.updateScore(index, -1)}
-//                         removeItem = {() => props.removeItem(index)}
-//                     />
-//                 )
-//             }
-//         </ol>
-//     )
-// }
-
+function PostList(props){
+    let style = {
+        minWidth: "60%",
+        width: "80%",
+        textAlign: "center",
+        border: "0" 
+    }
+    return (
+        <div>
+            <h2>Course Registration</h2>
+            <table style = {style} >
+            <tr>
+                <th>Remove</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Activity</th>
+                <th>Restrictions</th>
+            </tr>
+                <tbody>
+                {props.postList.map( (item,i) => {
+                     return (
+                      <tr>
+                        <th><button onClick={ () => props.removeItem(i) }>X</button></th>
+                        <th>{item.fname}</th>
+                        <th>{item.lname}</th>
+                        <th>{item.activity}</th>
+                        <th>{item.restrictions}</th>
+                     </tr>
+                    )             
+                })}
+                </tbody>
+            </table>  
+        </div>
+    )
+}
+ 
 class Register extends React.Component{
     constructor(props){
         super(props)
         this.state = {
             fname: "", 
             lname: "",
-            activity: "",
+            activity: "Science Lab",
             ck_diet: false,
-            ck_diabled: false,
+            ck_disabled: false,
             ck_medical: false,
             posts : [],
-            value: "Science Lab"
         }
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.addItem = this.addItem.bind(this)
+        this.removeItem = this.removeItem.bind(this)
     }
 
     handleInputChange(event) {
@@ -137,88 +120,98 @@ class Register extends React.Component{
         const value = target.type === 'checkbox' ? target.checked : target.value
         const name = target.name      
         this.setState({[name]: value})
-        console.log(this.state.ck_medical)
     }
 
     handleChange(event) {  
-        this.setState({value: event.target.value})       
-        console.log(this.state.value)
+        this.setState({activity: event.target.value})       
+        console.log(this.state.activity)
     }
 
     addItem(){
-//         var itemsCopy = this.state.items.slice()
-//         var truncatedString = this.state.value.substring(0,20);
-//         itemsCopy.push({"title":truncatedString, "score":0})
-//         itemsCopy.sort((a,b) => {
-//             return b.score -  a.score;
-//         })
-//         this.setState({ items:itemsCopy, value: "" })
-            console.log("Adding item...")
+        var postsCopy = this.state.posts.slice()
+        var newReg = {"fname":this.state.fname,
+                    "lname":this.state.lname,
+                    "activity":this.state.activity,
+                    "restrictions":this.restrictionsString()}
+        postsCopy.push(newReg)
+        this.setState({ posts:postsCopy}, () => console.log(this.state.posts))
+        this.resetForm()    
      }
 
-//     updateScore(index, val) {
-//         var itemsCopy = this.state.items.slice()
-//         itemsCopy[index].score += val
-//         itemsCopy.sort((a,b) => {
-//             return b.score - a.score
-//         })
-//         this.setState({items:itemsCopy})
-//     }
+    restrictionsString() {
+        var restrictions = ""
+        if(this.state.ck_diet) restrictions = restrictions + "a"
+        if(this.state.ck_disabled) restrictions = restrictions + "b"
+        if(this.state.ck_medical) restrictions = restrictions + "c"
+        return restrictions        
+    }
 
-//     removeItem(index){
-//         var itemsCopy = this.state.items.slice()
-//         itemsCopy.splice(index,1);
-//         itemsCopy.sort((a,b) => {
-//             return b.score - a.score
-//         })
-//         this.setState({items:itemsCopy})
-//     }
+    removeItem(index){
+        var postsCopy = this.state.posts.slice()
+        postsCopy.splice(index,1);
+        postsCopy.sort((a,b) => {
+            return b.score - a.score
+        })
+        this.setState({posts:postsCopy})
+    }
+
+    resetForm() {
+        this.setState({fname:"", 
+                    lname:"", 
+                    activity:"Science Lab",
+                    ck_diet: false,
+                    ck_disabled: false,
+                    ck_medical: false 
+                    })
+      }
 
     render() {
         return(
-            <form>
+            <div>
                 <Title title = "React Registration" />
                 <FirstName name = "fname"
                            label = "First Name" 
+                           type = "input" 
                            value = {this.state.fname} 
-                           onChange = {this.handleInputChange.bind(this)} 
+                           onChange = {this.handleInputChange} 
                 />
                 <LastName  name = "lname"
-                           label = "Last Name" 
+                           label = "Last Name"
+                           type = "input" 
                            value = {this.state.lname} 
-                           onChange = {this.handleInputChange.bind(this)} 
+                           onChange = {this.handleInputChange} 
                 />
                 <ActivitySelector onChange = {this.handleChange.bind(this)} 
                                   opts = {["Science Lab","Swimming","Cooking","Painting"]} 
+                                  name = "activity"
+                                  defaultValue = "Science Lab"
                 />
-                <br />Check all that apply<br />
                 <Checkbox label = "Dietary Restrictions" 
                           code = "a"
                           name = "ck_diet"
+                          checked = {this.state.ck_diet}
                           onChange = {this.handleInputChange.bind(this)}
                 />
                 <Checkbox label = "Physical Disabilities" 
                           code = "b"
                           name = "ck_disabled"
+                          checked = {this.state.ck_disabled}
                           onChange = {this.handleInputChange.bind(this)}
                 />
                 <Checkbox label = "Medical Needs" 
                           code = "c" 
                           name = "ck_medical"
+                          checked = {this.state.ck_medical}
                           onChange = {this.handleInputChange.bind(this)}
                 />
-                <br /><button id = "submit" onClick = { () => this.addItem()}>Submit</button>
+                <button id = "submit" onClick = { () => this.addItem()}>Submit</button>
 
-                {/* <PostList postList = {this.state.items}
-                          updateScore = {this.updateScore.bind(this)}  
-                          removeItem = {this.removeItem.bind(this)}
-                /> */}
-                <h2>Course Registrations</h2>
-                <table border="0" width="80%">
-                <TableHeader />
-                </table>
-            </form>
-            
+                
+                <PostList postList = {this.state.posts}
+                    removeItem = {this.removeItem.bind(this)}
+                />
+                
+            </div>
         )
     }
 }
